@@ -9,6 +9,8 @@ import Products from "./components/products"
 import NotFound from "./components/Auth/notFound"
 import Users from "./components/users"
 import { ToastContainer } from "react-toastify"
+import Chat from "./components/chat/chat"
+import ChatBox from "./components/chatbox"
 
 function App() {
   return (
@@ -30,6 +32,10 @@ function App() {
             <Route
               path="/users"
               element={<PrivateRoute element={<Users />} />}
+            />
+            <Route
+              path="/chat"
+              element={<PrivateRoute element={<ChatBox />} />}
             />
             <Route
               path="/*"

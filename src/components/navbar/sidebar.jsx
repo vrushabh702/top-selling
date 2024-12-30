@@ -25,6 +25,9 @@ const Sidebar = () => {
         <Nav.Link href="/users" className="btn btn-light mb-2 w-100">
           Users
         </Nav.Link>
+        <Nav.Link href="/chat" className="btn btn-light mb-2 w-100">
+          chat
+        </Nav.Link>
       </Nav>
     </div>
   )
