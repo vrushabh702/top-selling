@@ -1,9 +1,10 @@
 import React from "react"
-import { Col, Container, Row } from "react-bootstrap"
+import { Card, Col, Container, Row } from "react-bootstrap"
 import Sidebar from "./navbar/sidebar"
 import Topbar from "./navbar/topbar"
 import Footer from "./navbar/footer"
 import TopSellingProductsTable from "./reUseableComponents/topSellingProductsTable"
+import DashboardCards from "./reUseableComponents/dashboardCards"
 
 function Dashboard() {
   return (
@@ -22,11 +23,13 @@ function Dashboard() {
 
           {/* Main Content */}
           <Container>
+            <h1 className="text-center text-danger">
+              Welcome to the Dashboard!
+            </h1>
+
+            <DashboardCards></DashboardCards>
             <Row>
               <Col>
-                <h2 className="text-center text-primary">
-                  Welcome to the Dashboard!
-                </h2>
                 <TopSellingProductsTable hideActions={true} />
               </Col>
             </Row>

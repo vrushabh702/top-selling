@@ -16,7 +16,7 @@ function DeleteModal({
     handleDelete(selectedProduct) // Call the delete handler passed from the parent
     toast.error(`${selectedProduct.name} has been deleted!`, {
       position: toast.POSITION, // Positioning the toast on the top right
-      autoClose: 3000, // The toast will disappear after 3 seconds
+      autoClose: 2000, // The toast will disappear after 3 seconds
     })
 
     setShowModal(false) // Close the modal after deleting

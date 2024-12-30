@@ -3,6 +3,7 @@ import Footer from "./navbar/footer"
 import { Col, Container, Row } from "react-bootstrap"
 import Sidebar from "./navbar/sidebar"
 import Topbar from "./navbar/topbar"
+import UserCardsData from "./reUseableComponents/userCards"
 
 function Users() {
   return (
@@ -27,6 +28,7 @@ function Users() {
                   Welcome to the Users !
                 </h2>
                 {/* <TopSellingUsersTable /> */}
+                <UserCardsData></UserCardsData>
               </Col>
             </Row>
           </Container>

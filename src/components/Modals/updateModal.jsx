@@ -43,7 +43,7 @@ function UpdateModal({
 
     toast.success("Product updated successfully!", {
       position: toast.POSITION_TOP,
-      autoClose: 3000, // Toast will disappear after 3 seconds
+      autoClose: 2000, // Toast will disappear after 3 seconds
     })
 
     setShowModal(false) // Close the modal after saving changes
