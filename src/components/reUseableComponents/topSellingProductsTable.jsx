@@ -4,11 +4,14 @@ import { Table, Spinner, Button, Modal } from "react-bootstrap"
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa"
 import ViewModal from "../Modals/ViewModal"
 import UpdateModal from "../Modals/updateModal"
+import DeleteModal from "../Modals/deleteModal"
 
 const TopSellingProductsTable = ({ hideActions }) => {
   // State to store the data and loading state
   const [showModal, setShowModal] = useState(false)
+
   const [showViewModal, setShowViewModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   const [products, setProducts] = useState([])
@@ -64,11 +67,14 @@ const TopSellingProductsTable = ({ hideActions }) => {
     // Optionally, refresh the list or update the state after a successful update
   }
 
-  const deleteProduct = (product) => {
-    if (window.confirm(`Are you sure you want to delete ${product.name}?`)) {
-      alert(`Deleting product: ${product.name}`)
-      // Here you would usually call an API to delete the product
-    }
+  const handleShowDeleteModal = (product) => {
+    setSelectedProduct(product)
+    setShowDeleteModal(true)
+  }
+  const handleDelete = (product) => {
+    // Simulate API call or state update
+    // alert(`Deleting product: ${product.name}`)
+    setProducts(products.filter((p) => p.SrNo !== product.SrNo))
   }
 
   return (
@@ -111,7 +117,7 @@ const TopSellingProductsTable = ({ hideActions }) => {
                   <Button
                     className="m-2"
                     variant="danger"
-                    onClick={() => deleteProduct(product)}
+                    onClick={() => handleShowDeleteModal(product)}
                   >
                     <FaTrash /> {/* Trash icon for delete */}
                   </Button>
@@ -133,6 +139,13 @@ const TopSellingProductsTable = ({ hideActions }) => {
         setShowModal={setShowModal}
         selectedProduct={selectedProduct}
         handleUpdate={handleUpdate}
+      />
+
+      <DeleteModal
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        selectedProduct={selectedProduct}
+        handleDelete={handleDelete}
       />
     </div>
   )

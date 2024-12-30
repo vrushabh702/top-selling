@@ -1,6 +1,7 @@
 import React, { useState } from "react"
-import { Button, Form, Container, Row, Col } from "react-bootstrap"
+import { Button, Form, Container, Row, Col, Card } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const Login = () => {
   // State for email, password, and role
@@ -29,6 +30,11 @@ const Login = () => {
     // Store data in localStorage
     localStorage.setItem("user", JSON.stringify(user))
 
+    toast.success("Login successful!", {
+      position: toast.POSITION,
+      autoClose: 1000, // The toast will disappear after 3 seconds
+    })
+
     // Optionally, redirect to another page (like dashboard)
     navigate("/")
   }
@@ -37,33 +43,40 @@ const Login = () => {
     <Container>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
-          <h2 className="text-center">Login</h2>
-          {error && <div className="alert alert-danger">{error}</div>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="email">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
+          <Card bg="light" className="shadow-sm mt-5 ">
+            <Card.Body>
+              <h2 className="text-center">Login</h2>
+              {error && <div className="alert alert-danger">{error}</div>}
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="email">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="password" className="mt-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
+                <Form.Group controlId="password" className="mt-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Button variant="primary" type="submit" className="mt-3 w-100">
-              Login
-            </Button>
-          </Form>
+                <Button variant="primary" type="submit" className="mt-3 col-12">
+                  Login
+                </Button>
+                {/* <a href="#ForgetPassword" className="text-danger mt-2">
+                  Forget Password ?
+                </a> */}
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
