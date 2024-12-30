@@ -33,12 +33,14 @@ const Topbar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container fluid>
-        <Navbar.Brand href="#">Product Management</Navbar.Brand>
+        <Navbar.Brand href="#" className="text-info">
+          Product Management
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
           <Nav className="ms-auto">
             {/* Avatar Icon in the Topbar */}
-            <Navbar.Brand className="mt-2" href="#">
+            <Navbar.Brand className="mt-2 text-info" href="#">
               welcome {userName ? userName : "Guest"} !!
             </Navbar.Brand>
             <button className="btn btn-danger  " onClick={handleLogout}>

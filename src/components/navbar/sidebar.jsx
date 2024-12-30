@@ -19,10 +19,10 @@ const Sidebar = () => {
         <Nav.Link href="/" className="btn btn-light mb-2 w-100">
           Dashboard
         </Nav.Link>
-        <Nav.Link href="#products" className="btn btn-light mb-2 w-100">
+        <Nav.Link href="/products" className="btn btn-light mb-2 w-100">
           Products
         </Nav.Link>
-        <Nav.Link href="#users" className="btn btn-light mb-2 w-100">
+        <Nav.Link href="/users" className="btn btn-light mb-2 w-100">
           Users
         </Nav.Link>
       </Nav>

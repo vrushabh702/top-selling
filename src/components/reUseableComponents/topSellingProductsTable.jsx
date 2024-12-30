@@ -43,14 +43,14 @@ const TopSellingProductsTable = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Top Selling Products</h2>
+      <h2 className="text-warning"> Top Selling Products</h2>
       <Table striped bordered hover>
         <thead>
-          <tr>
-            <th>Sr No</th>
-            <th>Name</th>
-            <th>Skv</th>
-            <th>Price</th>
+          <tr className="">
+            <th className="bg-success text-light">Sr No</th>
+            <th className="bg-success text-light">Name</th>
+            <th className="bg-success text-light">Skv</th>
+            <th className="bg-success text-light"> Price</th>
           </tr>
         </thead>
         <tbody>

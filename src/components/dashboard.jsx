@@ -1,9 +1,9 @@
 import React from "react"
 import { Col, Container, Row } from "react-bootstrap"
-import TopSellingProductsTable from "./topSellingProductsTable"
 import Sidebar from "./navbar/sidebar"
 import Topbar from "./navbar/topbar"
 import Footer from "./navbar/footer"
+import TopSellingProductsTable from "./reUseableComponents/topSellingProductsTable"
 
 function Dashboard() {
   return (
@@ -24,7 +24,9 @@ function Dashboard() {
           <Container>
             <Row>
               <Col>
-                <h2>Welcome to the Dashboard!</h2>
+                <h2 className="text-center text-primary">
+                  Welcome to the Dashboard!
+                </h2>
                 <TopSellingProductsTable />
               </Col>
             </Row>

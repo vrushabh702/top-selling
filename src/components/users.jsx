@@ -3,9 +3,8 @@ import Footer from "./navbar/footer"
 import { Col, Container, Row } from "react-bootstrap"
 import Sidebar from "./navbar/sidebar"
 import Topbar from "./navbar/topbar"
-import ProductCard from "./reUseableComponents/productsCards"
 
-function Products() {
+function Users() {
   return (
     <div className="d-flex flex-column min-vh-100">
       {/* Main content layout with Sidebar and Content Area */}
@@ -25,11 +24,9 @@ function Products() {
             <Row>
               <Col>
                 <h2 className="text-center text-primary">
-                  Welcome to the Products !
-                  <div>
-                    <ProductCard></ProductCard>
-                  </div>
+                  Welcome to the Users !
                 </h2>
+                {/* <TopSellingUsersTable /> */}
               </Col>
             </Row>
           </Container>
@@ -44,4 +41,4 @@ function Products() {
   )
 }
 
-export default Products
+export default Users

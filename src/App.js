@@ -6,6 +6,8 @@ import Login from "./components/login"
 import PrivateRoute from "./components/Auth/privateRoute"
 import Logout from "./components/Auth/logout"
 import Products from "./components/products"
+import NotFound from "./components/Auth/notFound"
+import Users from "./components/users"
 
 function App() {
   return (
@@ -22,6 +24,14 @@ function App() {
             <Route
               path="/products"
               element={<PrivateRoute element={<Products />} />}
+            />
+            <Route
+              path="/users"
+              element={<PrivateRoute element={<Users />} />}
+            />
+            <Route
+              path="/*"
+              element={<PrivateRoute element={<NotFound />} />}
             />
           </Routes>
         </div>
