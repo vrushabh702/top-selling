@@ -1,0 +1,64 @@
+{
+  "topSellingProducts": [
+    {
+      "SrNo": 1,
+      "name": "Wireless Bluetooth Headphones",
+      "sky": "WBT-001",
+      "price": 79.99
+    },
+    {
+      "SrNo": 2,
+      "name": "Smart Watch 5 Pro",
+      "sky": "SW5P-002",
+      "price": 199.99
+    },
+    {
+      "SrNo": 3,
+      "name": "Portable Power Bank 10000mAh",
+      "sky": "PPB-003",
+      "price": 25.0
+    },
+    {
+      "SrNo": 4,
+      "name": "Laptop Cooling Pad",
+      "sky": "LCP-004",
+      "price": 39.99
+    },
+    {
+      "SrNo": 5,
+      "name": "Wireless Mouse",
+      "sky": "WM-005",
+      "price": 15.49
+    },
+    {
+      "SrNo": 6,
+      "name": "LED Desk Lamp with USB Port",
+      "sky": "LDL-006",
+      "price": 29.99
+    },
+    {
+      "SrNo": 7,
+      "name": "Fitness Tracker Pro",
+      "sky": "FTP-007",
+      "price": 49.99
+    },
+    {
+      "SrNo": 8,
+      "name": "Bluetooth Speakers",
+      "sky": "BTS-008",
+      "price": 69.99
+    },
+    {
+      "SrNo": 9,
+      "name": "Phone Case for iPhone 14",
+      "sky": "PC-009",
+      "price": 19.99
+    },
+    {
+      "SrNo": 10,
+      "name": "Smart Home Assistant",
+      "sky": "SHA-010",
+      "price": 129.99
+    }
+  ]
+}
