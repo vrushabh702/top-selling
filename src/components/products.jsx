@@ -4,6 +4,7 @@ import { Col, Container, Row } from "react-bootstrap"
 import Sidebar from "./navbar/sidebar"
 import Topbar from "./navbar/topbar"
 import ProductCard from "./reUseableComponents/productsCards"
+import TopSellingProductsTable from "./reUseableComponents/topSellingProductsTable"
 
 function Products() {
   return (
@@ -26,17 +27,17 @@ function Products() {
               <Col>
                 <h2 className="text-center text-primary">
                   Welcome to the Products !
-                  <div>
-                    <ProductCard></ProductCard>
-                  </div>
                 </h2>
+                <div>
+                  {/* <ProductCard></ProductCard> */}
+                  <TopSellingProductsTable></TopSellingProductsTable>
+                </div>
               </Col>
             </Row>
           </Container>
         </div>
       </div>
-
-      {/* Footer */}
+      z{/* Footer */}
       <div className="mt-auto">
         <Footer />
       </div>

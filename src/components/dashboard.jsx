@@ -27,7 +27,7 @@ function Dashboard() {
                 <h2 className="text-center text-primary">
                   Welcome to the Dashboard!
                 </h2>
-                <TopSellingProductsTable />
+                <TopSellingProductsTable hideActions={true} />
               </Col>
             </Row>
           </Container>

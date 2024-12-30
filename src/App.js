@@ -8,10 +8,12 @@ import Logout from "./components/Auth/logout"
 import Products from "./components/products"
 import NotFound from "./components/Auth/notFound"
 import Users from "./components/users"
+import { ToastContainer } from "react-toastify"
 
 function App() {
   return (
     <div className="App">
+      <ToastContainer />
       <Router>
         <div>
           <Routes>
