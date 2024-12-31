@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import { Table, Spinner, Button, Modal } from "react-bootstrap"
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa"
+import {
+  Table,
+  Spinner,
+  Button,
+  Modal,
+  Form,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap"
+import { FaEdit, FaEye, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa"
 import ViewModal from "../Modals/ViewModal"
 import UpdateModal from "../Modals/updateModal"
 import DeleteModal from "../Modals/deleteModal"
@@ -17,6 +25,12 @@ const TopSellingProductsTable = ({ hideActions }) => {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const [searchQueryName, setSearchQueryName] = useState("")
+  const [searchQuerySkv, setSearchQuerySkv] = useState("")
+  const [searchQueryPrice, setSearchQueryPrice] = useState("")
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
 
   // Fetch data using Axios with async/await
   const fetchProducts = async () => {
@@ -35,6 +49,47 @@ const TopSellingProductsTable = ({ hideActions }) => {
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  const handleSort = (key) => {
+    const direction =
+      sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc"
+    setSortConfig({ key, direction })
+
+    const sortedData = [...products].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1
+      return 0
+    })
+
+    setProducts(sortedData)
+  }
+
+  // Filter function for each column
+  const filterProducts = () => {
+    return products.filter((product) => {
+      const matchesName = product.name
+        .toLowerCase()
+        .includes(searchQueryName.toLowerCase())
+      const matchesSkv = product.sky
+        .toLowerCase()
+        .includes(searchQuerySkv.toLowerCase())
+      const matchesPrice = product.price.toString().includes(searchQueryPrice)
+
+      return matchesName && matchesSkv && matchesPrice
+    })
+  }
+
+  const handleSearchNameChange = (event) => {
+    setSearchQueryName(event.target.value)
+  }
+
+  const handleSearchSkvChange = (event) => {
+    setSearchQuerySkv(event.target.value)
+  }
+
+  const handleSearchPriceChange = (event) => {
+    setSearchQueryPrice(event.target.value)
+  }
 
   // Display a loading spinner while fetching data
   if (loading) {
@@ -77,21 +132,91 @@ const TopSellingProductsTable = ({ hideActions }) => {
     setProducts(products.filter((p) => p.SrNo !== product.SrNo))
   }
 
+  const filteredProducts = filterProducts()
+
   return (
     <div className="container mt-4">
       <h2 className="text-warning"> Top Selling Products</h2>
       <Table striped bordered hover>
         <thead>
           <tr className="">
-            <th className="bg-success text-light">Sr No</th>
-            <th className="bg-success text-light">Name</th>
-            <th className="bg-success text-light">Skv</th>
-            <th className="bg-success text-light"> Price</th>
+            <th
+              className="bg-success text-light"
+              onClick={() => handleSort("SrNo")}
+            >
+              Sr No
+              {sortConfig.key === "SrNo" &&
+                (sortConfig.direction === "asc" ? (
+                  <FaSortUp />
+                ) : (
+                  <FaSortDown />
+                ))}
+            </th>
+
+            <th
+              className="bg-success text-light"
+              onClick={() => handleSort("name")}
+            >
+              Name
+              {sortConfig.key === "name" &&
+                (sortConfig.direction === "asc" ? (
+                  <FaSortUp />
+                ) : (
+                  <FaSortDown />
+                ))}
+              <Form.Control
+                type="text"
+                placeholder="Search"
+                className="mt-2"
+                onChange={(e) => handleSearchNameChange(e, "name")}
+                value={searchQueryName}
+              />
+            </th>
+            <th
+              className="bg-success text-light"
+              onClick={() => handleSort("sky")}
+            >
+              Skv
+              {sortConfig.key === "sky" &&
+                (sortConfig.direction === "asc" ? (
+                  <FaSortUp />
+                ) : (
+                  <FaSortDown />
+                ))}
+              <Form.Control
+                type="text"
+                placeholder="Search"
+                className="mt-2 "
+                onChange={(e) => handleSearchSkvChange(e, "sky")}
+                value={searchQuerySkv}
+              />
+            </th>
+
+            <th
+              className="bg-success text-light"
+              onClick={() => handleSort("price")}
+            >
+              Price
+              {sortConfig.key === "price" &&
+                (sortConfig.direction === "asc" ? (
+                  <FaSortUp />
+                ) : (
+                  <FaSortDown />
+                ))}
+              <Form.Control
+                type="text"
+                placeholder="Search"
+                className="mt-2"
+                onChange={(e) => handleSearchPriceChange(e, "price")}
+                value={searchQueryPrice}
+              />
+            </th>
+
             {!hideActions && <th className="bg-success text-light">Action</th>}
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product.SrNo}>
               <td>{product.SrNo}</td>
               <td>{product.name}</td>

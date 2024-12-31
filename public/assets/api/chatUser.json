@@ -1,0 +1,36 @@
+{
+  "men": [
+    {
+      "first_name": "Arjun",
+      "last_name": "Kapoor",
+      "image_path": "/assets/images/chatUser/man1.jpg"
+    },
+    {
+      "first_name": "Rohan",
+      "last_name": "Verma",
+      "image_path": "/assets/images/chatUser/man2.jpg"
+    },
+    {
+      "first_name": "Vijay",
+      "last_name": "Singh",
+      "image_path": "/assets/images/chatUser/man3.jpg"
+    }
+  ],
+  "women": [
+    {
+      "first_name": "Sita",
+      "last_name": "Mehta",
+      "image_path": "/assets/images/chatUser/woman1.jpg"
+    },
+    {
+      "first_name": "Ananya",
+      "last_name": "Joshi",
+      "image_path": "/assets/images/chatUser/woman2.jpg"
+    },
+    {
+      "first_name": "Priya",
+      "last_name": "Nair",
+      "image_path": "/assets/images/chatUser/woman3.jpg"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
   Avatar,
   Divider,
@@ -15,6 +15,7 @@ import {
 import SendIcon from "@mui/icons-material/Send"
 import { makeStyles } from "@mui/styles"
 import { styled } from "@mui/system"
+import axios from "axios"
 
 const useStyles = makeStyles({
   chatSection: {
@@ -33,6 +34,62 @@ const useStyles = makeStyles({
 const Chat = () => {
   const classes = useStyles()
 
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [selectedUser, setSelectedUser] = useState(null) // State to track selected user
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Use Axios for HTTP GET request
+        const response = await axios.get("/assets/api/chatUser.json")
+
+        // Axios returns the data directly in the response object
+        setUsers(response.data)
+      } catch (err) {
+        // Handle errors from Axios (network errors, server errors, etc.)
+        setError(err.message)
+      } finally {
+        // Set loading to false when the request is done
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <Typography>Loading...</Typography>
+  }
+
+  if (error) {
+    return <Typography>Error: {error}</Typography>
+  }
+
+  // Function to alternate men and women
+  const alternateUsers = () => {
+    const alternatingList = []
+    const men = users.men
+    const women = users.women
+    const length = Math.max(men.length, women.length)
+
+    for (let i = 0; i < length; i++) {
+      if (men[i]) {
+        alternatingList.push(men[i])
+      }
+      if (women[i]) {
+        alternatingList.push(women[i])
+      }
+    }
+
+    return alternatingList
+  }
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user)
+  }
+
   return (
     <div>
       <Grid container>
@@ -49,10 +106,10 @@ const Chat = () => {
               <ListItemIcon>
                 <Avatar
                   alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
+                  src="../assets/images/chatUser/man1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="John Wick"></ListItemText>
+              <ListItemText primary="Arjun Patel"></ListItemText>
             </ListItem>
           </List>
           <Divider />
@@ -65,50 +122,25 @@ const Chat = () => {
             />
           </Grid>
           <Divider />
+
           <List>
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
+            {alternateUsers().map((user, index) => (
+              <ListItem
+                button
+                key={user.first_name + " " + user.last_name + index}
+              >
+                <ListItemIcon>
+                  <Avatar
+                    alt={user.first_name + " " + user.last_name}
+                    src={user.image_path}
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary={user.first_name + " " + user.last_name}
                 />
-              </ListItemIcon>
-              <ListItemText primary="Remy Sharp"></ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
-
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Komal"></ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
-
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="pooja"></ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
-
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Suraj"></ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
+                <ListItemText secondary="online" align="right" />
+              </ListItem>
+            ))}
           </List>
         </Grid>
         <Grid item xs={9}>
