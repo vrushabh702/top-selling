@@ -11,6 +11,7 @@ import Users from "./components/users"
 import { ToastContainer } from "react-toastify"
 import Chat from "./components/chat/chat"
 import ChatBox from "./components/chatbox"
+import ApiProducts from "./components/apiProductTable/apiProduct"
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
             <Route
               path="/products"
               element={<PrivateRoute element={<Products />} />}
+            />
+            <Route
+              path="/apiProducts"
+              element={<PrivateRoute element={<ApiProducts />} />}
             />
             <Route
               path="/users"

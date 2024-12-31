@@ -22,6 +22,9 @@ const Sidebar = () => {
         <Nav.Link href="/products" className="btn btn-light mb-2 w-100">
           Products
         </Nav.Link>
+        <Nav.Link href="/apiProducts" className="btn btn-light mb-2 w-100">
+          Api Products
+        </Nav.Link>
         <Nav.Link href="/users" className="btn btn-light mb-2 w-100">
           Users
         </Nav.Link>

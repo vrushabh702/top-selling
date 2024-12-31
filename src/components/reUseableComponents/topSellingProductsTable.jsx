@@ -13,6 +13,7 @@ import { FaEdit, FaEye, FaSortDown, FaSortUp, FaTrash } from "react-icons/fa"
 import ViewModal from "../Modals/ViewModal"
 import UpdateModal from "../Modals/updateModal"
 import DeleteModal from "../Modals/deleteModal"
+import CustomPagination from "./pagination"
 
 const TopSellingProductsTable = ({ hideActions }) => {
   // State to store the data and loading state
@@ -31,6 +32,9 @@ const TopSellingProductsTable = ({ hideActions }) => {
   const [searchQueryPrice, setSearchQueryPrice] = useState("")
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 4 // Adjust this based on how many items you want per page
 
   // Fetch data using Axios with async/await
   const fetchProducts = async () => {
@@ -91,6 +95,18 @@ const TopSellingProductsTable = ({ hideActions }) => {
     setSearchQueryPrice(event.target.value)
   }
 
+  const indexOfLastProduct = currentPage * itemsPerPage
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
+  const filteredProducts = filterProducts()
+
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  )
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
   // Display a loading spinner while fetching data
   if (loading) {
     return (
@@ -131,8 +147,6 @@ const TopSellingProductsTable = ({ hideActions }) => {
     // alert(`Deleting product: ${product.name}`)
     setProducts(products.filter((p) => p.SrNo !== product.SrNo))
   }
-
-  const filteredProducts = filterProducts()
 
   return (
     <div className="container mt-4">
@@ -216,7 +230,7 @@ const TopSellingProductsTable = ({ hideActions }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product) => (
+          {currentProducts.map((product) => (
             <tr key={product.SrNo}>
               <td>{product.SrNo}</td>
               <td>{product.name}</td>
@@ -271,6 +285,13 @@ const TopSellingProductsTable = ({ hideActions }) => {
         setShowModal={setShowDeleteModal}
         selectedProduct={selectedProduct}
         handleDelete={handleDelete}
+      />
+
+      <CustomPagination
+        totalItems={filteredProducts.length} // Pass the total number of filtered products
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
       />
     </div>
   )

@@ -1,0 +1,60 @@
+.custom-modal .product-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.custom-modal .product-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.custom-modal .product-discount {
+  font-size: 1rem;
+  color: #f39c12;
+}
+
+.custom-modal .product-rating {
+  font-size: 1.2rem;
+  color: #ffd700;
+}
+
+.custom-modal .product-status {
+  font-size: 1rem;
+}
+
+.custom-modal .product-brand-category p,
+.custom-modal .product-sku p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.custom-modal .product-actions {
+  margin-top: 1rem;
+}
+
+.custom-modal .product-actions button {
+  width: 48%;
+}
+
+.custom-modal .reviews-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.custom-modal .reviews-list li {
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.custom-modal .reviews-list .reviewer-name {
+  font-weight: bold;
+}
+
+.custom-modal .reviews-list .review-date {
+  font-size: 0.9rem;
+  color: #777;
+}
