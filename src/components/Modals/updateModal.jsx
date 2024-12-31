@@ -1,3 +1,4 @@
+import { randomInt } from "mathjs"
 import React, { useState, useEffect } from "react"
 import { Modal, Button, Form } from "react-bootstrap"
 import { toast } from "react-toastify"
@@ -14,16 +15,27 @@ function UpdateModal({
     sky: "",
     price: "",
   })
+  const [randomNumber1, setRandomNumber1] = useState(null)
+  const [randomNumber2, setRandomNumber2] = useState(null)
+  const [userInput, setUserInput] = useState("")
+  const [isUpdateEnabled, setIsUpdateEnabled] = useState(false)
 
   useEffect(() => {
-    if (selectedProduct) {
+    if (selectedProduct && showModal) {
       setUpdatedProduct({
         name: selectedProduct.name,
         sky: selectedProduct.sky,
         price: selectedProduct.price,
       })
+
+      const num1 = randomInt(0, 100)
+      const num2 = randomInt(0, 100)
+      setRandomNumber1(num1)
+      setRandomNumber2(num2)
+      setUserInput("")
+      setIsUpdateEnabled(false)
     }
-  }, [selectedProduct])
+  }, [showModal, selectedProduct])
 
   const handleCloseModal = () => {
     setShowModal(false) // Close the modal
@@ -35,6 +47,18 @@ function UpdateModal({
       ...prev,
       [name]: value,
     }))
+  }
+
+  const handleMathInputChange = (e) => {
+    const input = e.target.value
+    setUserInput(input)
+
+    const correctAnswer = randomNumber1 + randomNumber2
+    if (parseInt(input) === correctAnswer) {
+      setIsUpdateEnabled(true)
+    } else {
+      setIsUpdateEnabled(false)
+    }
   }
 
   const handleSaveChanges = () => {
@@ -87,6 +111,20 @@ function UpdateModal({
                 step="0.01"
               />
             </Form.Group>
+            {/* Add the math question for verification */}
+            {/* I WANT A LINE OVER HIERE I  */}
+            <Form.Group className="mt-4 text-warning bg-light">
+              <p> To confirm, please solve the following:</p>
+              <strong>
+                {randomNumber1} + {randomNumber2} = ?
+              </strong>
+            </Form.Group>
+            <Form.Control
+              type="number"
+              placeholder="Enter the number to confirm"
+              value={userInput}
+              onChange={handleMathInputChange}
+            />
           </Form>
         ) : (
           <p>No product selected</p>
@@ -97,7 +135,11 @@ function UpdateModal({
         <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={handleSaveChanges}>
+        <Button
+          variant="primary"
+          onClick={handleSaveChanges}
+          disabled={!isUpdateEnabled}
+        >
           Save Changes
         </Button>
       </Modal.Footer>
