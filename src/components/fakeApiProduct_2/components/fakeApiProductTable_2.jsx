@@ -12,128 +12,119 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap"
-import { FaEye, FaEdit, FaTrash, FaThumbsUp, FaComment } from "react-icons/fa"
-import ViewModal from "../Modals/viewModal"
-import EditModal from "../Modals/editModal"
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa"
 import DeleteModal from "../Modals/deleteModal"
+import EditModal from "../Modals/editModal"
+import ViewModal from "../Modals/viewModal"
 
-const PostTable = () => {
+const FakeApiProductTable_2 = () => {
   // State variables
-  const [posts, setPosts] = useState([])
+  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [limit, setLimit] = useState(5)
   const [showModal, setShowModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
-  const [editPost, setEditPost] = useState({})
+  const [editProduct, setEditProduct] = useState({})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [deletePost, setDeletePost] = useState({})
+  const [deleteProduct, setDeleteProduct] = useState({})
 
-  const [modalPost, setModalPost] = useState(null)
+  const [modalProduct, setModalProduct] = useState(null)
   const [searchQuery, setSearchQuery] = useState("")
 
   // Fetching data from the API
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          "https://www.freetestapi.com/api/v1/posts"
-        )
-        setPosts(response.data)
+        setLoading(true)
+        const response = await axios.get(`https://fakestoreapi.com/products`)
+        setProducts(response.data)
+        console.log(response.data, "response.data")
         setLoading(false)
       } catch (err) {
-        setError("Failed to fetch posts")
+        setError("Failed to fetch products")
         console.error(err)
         setLoading(false)
       }
     }
 
-    fetchPosts()
-  }, [])
+    fetchProducts()
+  }, []) // Runs once when the component mounts
 
-  // Fetching data from the API
+  // Fetching data with limit
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchProductsWithLimit = async () => {
       try {
         setLoading(true)
         const response = await axios.get(
-          `https://www.freetestapi.com/api/v1/posts?limit=${limit}`
+          `https://fakestoreapi.com/products?limit=${limit}`
         )
-        setPosts(response.data)
+        setProducts(response.data)
         setLoading(false)
       } catch (err) {
-        setError("Failed to fetch posts")
+        setError("Failed to fetch products")
         console.error(err)
         setLoading(false)
       }
     }
 
-    fetchPosts()
+    fetchProductsWithLimit()
   }, [limit]) // Re-fetch data when limit changes
 
-  const handleEditClick = (post) => {
-    setEditPost(post) // Set the post details in the state
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const response = await axios.get(
+          `https://fakestoreapi.com/products?limit=${limit}`
+        )
+        setProducts(response.data)
+        setLoading(false)
+      } catch (err) {
+        setError("Failed to fetch products")
+        setLoading(false)
+      }
+    }
+    fetchProducts()
+  }, [limit])
+
+  const handleSaveChanges = (updatedProduct) => {
+    setProducts(
+      products.map((prod) =>
+        prod.id === updatedProduct.id ? updatedProduct : prod
+      )
+    )
+  }
+
+  const handleCloseModal = () => {
+    setShowEditModal(false)
+    setProducts(null)
+  }
+
+  const handleEditClick = (product) => {
+    setEditProduct(product) // Set the product details in the state
     setShowEditModal(true) // Open the Edit Modal
   }
-  const handleDeleteClick = (post) => {
-    setDeletePost(post) // Set the post details in the state
-    setShowDeleteModal(true) // Open the Edit Modal
+
+  const handleDeleteClick = (product) => {
+    setDeleteProduct(product) // Set the product details in the state
+    setShowDeleteModal(true) // Open the Delete Modal
   }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setEditPost({
-      ...editPost,
+    setEditProduct({
+      ...editProduct,
       [name]: value,
     })
   }
 
-  const handleSaveChanges = async () => {
-    try {
-      const response = await axios.put(
-        `https://www.freetestapi.com/api/v1/posts/${editPost.id}`,
-        editPost
-      )
-      setPosts(
-        posts.map((post) => (post.id === editPost.id ? response.data : post))
-      ) // Update the post in the list
-      setShowEditModal(false) // Close the Edit Modal
-    } catch (err) {
-      setError("Failed to update post")
-      console.error(err)
-    }
-  }
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (searchQuery.trim() !== "") {
-        try {
-          const response = await axios.get(
-            `https://www.freetestapi.com/api/v1/posts?search=${searchQuery}`
-          )
-          setPosts(response.data) // Assuming the users API will return posts (adjust as needed)
-        } catch (err) {
-          setError("Failed to fetch posts")
-          console.error(err)
-        }
-      } else {
-        setPosts([]) // Clear posts if search query is empty
-      }
-    }
-
-    if (searchQuery) {
-      fetchUsers()
-    } else {
-      // Optionally, call API to fetch all posts when search query is empty
-    }
-  }, [searchQuery])
-
   const handleViewClick = async (postId) => {
     try {
       const response = await axios.get(
-        `https://www.freetestapi.com/api/v1/posts/${postId}`
+        `https://fakestoreapi.com/products/${postId}`
       )
-      setModalPost(response.data)
+      setModalProduct(response.data)
       setShowModal(true)
     } catch (err) {
       setError("Failed to fetch post details")
@@ -143,34 +134,35 @@ const PostTable = () => {
 
   // Function to render the table rows
   const renderTableRows = () => {
-    return posts.map((post) => (
-      <tr key={post.id}>
-        <td className="col-0">{post.id}</td>
-        <td className="col-2">{post.title}</td>
-        <td className="col-3">{post.content}</td>
-        <td className="col-1">{post.author}</td>
-        <td className="col-2">{new Date(post.timestamp).toLocaleString()}</td>
-        <td className="col-1">{post.likes}</td>
-        <td className="col-1">{post.comments.length}</td>
+    return products.map((product) => (
+      <tr key={product.id}>
+        <td className="col-0">{product.id}</td>
+        <td className="col-2">{product.title}</td>
+        <td className="col-3">{product.description}</td>
+        <td className="col-1">{product.category}</td>
+        <td className="col-2">${product.price}</td>
+        <td className="col-1">
+          Rating: {product.rating.rate} (Total Ratings: {product.rating.count})
+        </td>
         <td className="col-2">
           <Button
             variant="info"
             className="mx-1"
-            onClick={() => handleViewClick(post.id)}
+            onClick={() => handleViewClick(product.id)}
           >
             <FaEye />
           </Button>
           <Button
             variant="warning"
             className="mx-1"
-            onClick={() => handleEditClick(post)}
+            onClick={() => handleEditClick(product)}
           >
             <FaEdit />
           </Button>
           <Button
             variant="danger"
             className="mx-1"
-            onClick={() => handleDeleteClick(post)}
+            onClick={() => handleDeleteClick(product)}
           >
             <FaTrash />
           </Button>
@@ -197,7 +189,7 @@ const PostTable = () => {
       <div className="d-flex justify-content-between mb-3">
         <Dropdown className="mb-3">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Show {limit} Posts
+            Show {limit} Products
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -237,11 +229,10 @@ const PostTable = () => {
           <tr>
             <th className="col-0">ID</th>
             <th className="col-2">Title</th>
-            <th className="col-3">Content</th>
-            <th className="col-1">Author</th>
-            <th className="col-2">Timestamp</th>
-            <th className="col-1">Likes</th>
-            <th className="col-1">Comments</th>
+            <th className="col-3">Description</th>
+            <th className="col-1">Category</th>
+            <th className="col-2">Price</th>
+            <th className="col-1">Rating</th>
             <th className="col-2">Actions</th>
           </tr>
         </thead>
@@ -249,24 +240,29 @@ const PostTable = () => {
       </Table>
       <ViewModal
         show={showModal}
-        post={modalPost}
+        product={modalProduct}
         onClose={() => setShowModal(false)}
       ></ViewModal>
-      <EditModal
+      {/* <EditModal
         show={showEditModal}
-        post={editPost}
+        product={editProduct}
         handleInputChange={handleInputChange}
         handleSaveChanges={handleSaveChanges}
         onClose={() => setShowEditModal(false)}
-      ></EditModal>
-
+      ></EditModal> */}
+      <EditModal
+        show={showEditModal}
+        post={modalProduct}
+        handleClose={handleCloseModal}
+        handleSaveChanges={handleSaveChanges}
+      />
       <DeleteModal
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        selectedProduct={posts}
+        selectedProduct={products}
       ></DeleteModal>
     </div>
   )
 }
 
-export default PostTable
+export default FakeApiProductTable_2

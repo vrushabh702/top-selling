@@ -13,6 +13,8 @@ import Chat from "./components/chat/chat"
 import ChatBox from "./components/chatbox"
 import ApiProducts from "./components/apiProductTable/apiProduct"
 import FakeApiProduct from "./components/fakeApiProduct/fakeApiProduct"
+import FakeApiProduct_2 from "./components/fakeApiProduct_2/fakeApiProduct_2"
+import FakeApiProduct3 from "./components/fakeApiProduct3/fakeApiProduct3"
 
 function App() {
   return (
@@ -38,6 +40,10 @@ function App() {
             <Route
               path="/fakerApiProduct"
               element={<PrivateRoute element={<FakeApiProduct />} />}
+            />
+            <Route
+              path="/fakerApiProduct_2"
+              element={<PrivateRoute element={<FakeApiProduct3 />} />}
             />
             <Route
               path="/users"
