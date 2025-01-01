@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify"
 import Chat from "./components/chat/chat"
 import ChatBox from "./components/chatbox"
 import ApiProducts from "./components/apiProductTable/apiProduct"
+import FakeApiProduct from "./components/fakeApiProduct/fakeApiProduct"
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
             <Route
               path="/apiProducts"
               element={<PrivateRoute element={<ApiProducts />} />}
+            />
+            <Route
+              path="/fakerApiProduct"
+              element={<PrivateRoute element={<FakeApiProduct />} />}
             />
             <Route
               path="/users"
