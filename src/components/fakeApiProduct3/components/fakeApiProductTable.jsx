@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState, useEffect } from "react"
 import axios from "axios"
 import {
   FaTruckLoading,
@@ -22,7 +22,7 @@ const FakeProductTable3 = () => {
     direction: "asc", // Default direction is ascending
   })
 
-  // Function to fetch products with sorting
+  // Function to fetch and filter products
   const fetchProducts = async (queryString = "") => {
     setLoading(true)
     setError(null)
@@ -32,7 +32,6 @@ const FakeProductTable3 = () => {
         `https://fakestoreapi.com/products${queryString}`
       )
       setProducts(response.data)
-      setFilteredProducts(response.data) // Initially, set all products as filtered
     } catch (err) {
       setError("Error fetching products")
     } finally {
@@ -40,15 +39,30 @@ const FakeProductTable3 = () => {
     }
   }
 
-  // Fetch all products when component mounts
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  // Build query string dynamically based on limit and sortConfig
+  const buildQueryString = () => {
+    let queryString = ""
+
+    // Add limit to the query string if it's defined
+    if (dynamicLimit) {
+      queryString += `?limit=${dynamicLimit}`
+    }
+
+    // Add sorting to the query string if sorting is configured
+    if (sortConfig.key) {
+      if (queryString) {
+        queryString += `&sort=${sortConfig.direction}&key=${sortConfig.key}`
+      } else {
+        queryString += `?sort=${sortConfig.direction}&key=${sortConfig.key}`
+      }
+    }
+
+    return queryString
+  }
 
   // Handle limit change
   const handleLimitChange = (newLimit) => {
     setDynamicLimit(newLimit)
-    fetchProducts(`?limit=${newLimit}`)
   }
 
   // Handle search input change
@@ -56,7 +70,23 @@ const FakeProductTable3 = () => {
     setSearchQuery(event.target.value)
   }
 
-  // Filter products based on search query
+  // Handle sort change (ascending or descending)
+  const handleSortChange = (key) => {
+    let direction = "asc"
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc" // Toggle direction
+    }
+
+    setSortConfig({ key, direction })
+  }
+
+  // Effect to fetch products whenever dynamicLimit, sortConfig, or searchQuery changes
+  useEffect(() => {
+    const queryString = buildQueryString()
+    fetchProducts(queryString)
+  }, [dynamicLimit, sortConfig]) // Depend on limit and sort
+
+  // Effect to filter products based on search query and search the `products` state
   useEffect(() => {
     if (searchQuery) {
       setFilteredProducts(
@@ -68,17 +98,6 @@ const FakeProductTable3 = () => {
       setFilteredProducts(products) // Reset filter when search is cleared
     }
   }, [searchQuery, products])
-
-  // Handle sort change (ascending or descending)
-  const handleSortChange = (key) => {
-    let direction = "asc"
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc" // Toggle direction
-    }
-
-    setSortConfig({ key, direction })
-    fetchProducts(`?sort=${direction}&key=${key}`)
-  }
 
   // Handle action for each product
   const handleView = (id) => {

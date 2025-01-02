@@ -8,8 +8,10 @@ import {
   Spinner,
   Button,
   Modal,
+  Badge,
 } from "react-bootstrap"
 import CustomPagination from "./pagination"
+import { FaEnvelope, FaMapMarkerAlt, FaPhone, FaUser } from "react-icons/fa"
 
 // Fetching random users from RandomUser API
 const UserCardsData = () => {
@@ -113,51 +115,117 @@ const UserCardsData = () => {
       </Row>
 
       {selectedUser && (
-        <Modal show={showModal} onHide={handleCloseModal} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title className="text-success">{`${selectedUser.name.first} ${selectedUser.name.last}`}</Modal.Title>
+        <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
+          <Modal.Header closeButton className="bg-success text-white">
+            <Modal.Title>
+              {`${selectedUser.name.first} ${selectedUser.name.last}`}
+            </Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
-            <Row className="text-center">
-              <Col md={4} className="mt-5">
-                <img
-                  src={selectedUser.picture.large}
-                  alt="Profile"
-                  className="img-fluid rounded-circle"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    objectFit: "cover",
-                  }}
-                />
+            <Row className="align-items-center">
+              {/* Profile Image */}
+              <Col md={4} className="d-flex justify-content-center">
+                <Card className="border-0 rounded-lg shadow-lg">
+                  <Card.Img
+                    variant="top"
+                    src={selectedUser.picture.large}
+                    className="img-fluid rounded-circle m-4"
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      objectFit: "cover",
+                    }}
+                    alt="Profile"
+                  />
+                </Card>
               </Col>
+
+              {/* User Details */}
               <Col md={8}>
-                <h4>Date of Birth: {selectedUser.dob.date.split("T")[0]}</h4>
-                <h5>Age: {selectedUser.dob.age}</h5>
-                <p>
-                  <strong>Email:</strong> {selectedUser.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {selectedUser.phone}
-                </p>
-                <p>
-                  <strong>street number:</strong>{" "}
-                  {selectedUser.location.street.number}{" "}
-                  <strong>street name:</strong>
-                  {selectedUser.location.street.name}, <strong>city </strong>
-                  {selectedUser.location.city}, {selectedUser.location.state},{" "}
-                  <strong>Country:</strong>
-                  {selectedUser.location.country}
-                </p>
-                <p>
-                  <strong>Username:</strong> {selectedUser.login.username}
-                </p>
+                <Card className="shadow-lg border-0">
+                  <Card.Body>
+                    {/* Date of Birth */}
+                    <Row className="mt-4">
+                      <Col md={6}>
+                        <h4 className="text-success">Date of Birth:</h4>
+                        <Badge pill bg="info" className="fs-6">
+                          {selectedUser.dob.date.split("T")[0]}
+                        </Badge>
+                      </Col>
+                      <Col md={6}>
+                        <h5 className="mt-3">
+                          Age:{" "}
+                          <span className="text-primary">
+                            {selectedUser.dob.age}
+                          </span>
+                        </h5>
+                      </Col>
+                    </Row>
+
+                    {/* Age */}
+                    <Row></Row>
+
+                    {/* Contact Information */}
+                    <Row>
+                      <Col md={12}>
+                        <div className="mt-3">
+                          <h6>
+                            <FaEnvelope className="text-primary" />{" "}
+                            <strong>Email:</strong>{" "}
+                            <a
+                              href={`mailto:${selectedUser.email}`}
+                              className="text-primary"
+                            >
+                              {selectedUser.email}
+                            </a>
+                          </h6>
+                        </div>
+                        <div className="mt-2">
+                          <h6>
+                            <FaPhone className="text-warning" />{" "}
+                            <strong>Phone:</strong>{" "}
+                            <a
+                              href={`tel:${selectedUser.phone}`}
+                              className="text-success"
+                            >
+                              {selectedUser.phone}
+                            </a>
+                          </h6>
+                        </div>
+                        <div className="mt-2">
+                          <h6>
+                            <FaMapMarkerAlt className="text-danger" />{" "}
+                            <strong>Location:</strong>{" "}
+                            <span className="text-muted">
+                              {`${selectedUser.location.street.number} ${selectedUser.location.street.name}, ${selectedUser.location.city}, ${selectedUser.location.state}, ${selectedUser.location.country}`}
+                            </span>
+                          </h6>
+                        </div>
+                        <div className="mt-2">
+                          <h6>
+                            <FaUser className="text-success" />
+                            <strong>Username:</strong>{" "}
+                            <span className="text-muted">
+                              {selectedUser.login.username}
+                            </span>
+                          </h6>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
               </Col>
             </Row>
           </Modal.Body>
-          <Modal.Footer>
+
+          {/* Modal Footer with Action Buttons */}
+          <Modal.Footer className="d-flex justify-content-between">
             <Button variant="secondary" onClick={handleCloseModal}>
               Close
+            </Button>
+            <Button variant="primary" onClick={handleCloseModal}>
+              Edit Profile
             </Button>
           </Modal.Footer>
         </Modal>
