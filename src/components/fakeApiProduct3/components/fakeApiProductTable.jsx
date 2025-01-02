@@ -11,6 +11,7 @@ import {
 import { Table, Button, Spinner, Dropdown, Form } from "react-bootstrap"
 import ViewModal from "../Modals/viewModal"
 import EditModal from "../Modals/editModal"
+import DeleteModal from "../Modals/deleteModal"
 
 const FakeProductTable3 = () => {
   const [products, setProducts] = useState([])
@@ -28,6 +29,7 @@ const FakeProductTable3 = () => {
   const [selectedProductId, setSelectedProductId] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const [updatedProduct, setUpdatedProduct] = useState(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   // Function to fetch and filter products
   const fetchProducts = async (queryString = "") => {
@@ -150,8 +152,15 @@ const FakeProductTable3 = () => {
     setUpdatedProduct(updatedProductData)
   }
 
-  const handleDelete = (id) => {
-    alert(`Delete product with id: ${id}`)
+  const handleDeleteClick = (productId) => {
+    setSelectedProductId(productId)
+    setShowDeleteModal(true) // Show delete modal
+  }
+
+  const handleDeleteConfirm = (productId) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== productId)
+    )
   }
 
   return (
@@ -273,7 +282,7 @@ const FakeProductTable3 = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDeleteClick(product.id)}
                   >
                     <FaTrash /> {/* Trash icon for delete */}
                   </Button>
@@ -294,6 +303,13 @@ const FakeProductTable3 = () => {
         handleClose={handleCloseEditModal}
         productId={selectedProductId}
         handleUpdateProduct={handleUpdateProduct}
+      />
+
+      <DeleteModal
+        show={showDeleteModal}
+        handleClose={() => setShowDeleteModal(false)}
+        productId={selectedProductId}
+        handleDeleteConfirm={handleDeleteConfirm}
       />
     </div>
   )
