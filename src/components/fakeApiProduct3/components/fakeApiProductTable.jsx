@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import axios from "axios"
 import {
   FaTruckLoading,
@@ -9,6 +9,8 @@ import {
   FaTrash,
 } from "react-icons/fa"
 import { Table, Button, Spinner, Dropdown, Form } from "react-bootstrap"
+import ViewModal from "../Modals/viewModal"
+import EditModal from "../Modals/editModal"
 
 const FakeProductTable3 = () => {
   const [products, setProducts] = useState([])
@@ -21,6 +23,11 @@ const FakeProductTable3 = () => {
     key: "id", // Default sort by 'id'
     direction: "asc", // Default direction is ascending
   })
+
+  const [showModal, setShowModal] = useState(false)
+  const [selectedProductId, setSelectedProductId] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [updatedProduct, setUpdatedProduct] = useState(null)
 
   // Function to fetch and filter products
   const fetchProducts = async (queryString = "") => {
@@ -80,9 +87,22 @@ const FakeProductTable3 = () => {
     setSortConfig({ key, direction })
   }
 
+  // added for fitler after updated value
+  const sortedProducts = useMemo(() => {
+    return [...filteredProducts].sort((a, b) => {
+      if (sortConfig.direction === "asc") {
+        return a[sortConfig.key] < b[sortConfig.key] ? -1 : 1
+      }
+      return a[sortConfig.key] > b[sortConfig.key] ? -1 : 1
+    })
+  }, [filteredProducts, sortConfig])
+  console.log("sortedProducts ", sortedProducts)
+
   // Effect to fetch products whenever dynamicLimit, sortConfig, or searchQuery changes
   useEffect(() => {
     const queryString = buildQueryString()
+    console.log("Fetching products with query:", queryString)
+
     fetchProducts(queryString)
   }, [dynamicLimit, sortConfig]) // Depend on limit and sort
 
@@ -99,13 +119,35 @@ const FakeProductTable3 = () => {
     }
   }, [searchQuery, products])
 
-  // Handle action for each product
   const handleView = (id) => {
-    alert(`View product with id: ${id}`)
+    setSelectedProductId(id)
+    setShowModal(true)
   }
 
-  const handleUpdate = (id) => {
-    alert(`Update product with id: ${id}`)
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedProductId(null)
+  }
+
+  const handleEditClick = (productId) => {
+    setSelectedProductId(productId)
+    setShowEditModal(true)
+  }
+
+  const handleCloseEditModal = () => setShowEditModal(false)
+
+  // const handleUpdateProduct = (product) => {
+  const handleUpdateProduct = (updatedProductData) => {
+    // setUpdatedProduct(product)
+
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProductData.id
+          ? { ...product, ...updatedProductData } // This merges the updated data
+          : product
+      )
+    )
+    setUpdatedProduct(updatedProductData)
   }
 
   const handleDelete = (id) => {
@@ -208,7 +250,7 @@ const FakeProductTable3 = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.slice(0, dynamicLimit).map((product) => (
+            {sortedProducts.slice(0, dynamicLimit).map((product) => (
               <tr key={product.id}>
                 <td>{product.id}</td>
                 <td>{product.title}</td>
@@ -224,7 +266,7 @@ const FakeProductTable3 = () => {
                   </Button>
                   <Button
                     variant="warning"
-                    onClick={() => handleUpdate(product.id)}
+                    onClick={() => handleEditClick(product.id)}
                     className="mx-2"
                   >
                     <FaEdit /> {/* Edit icon for update */}
@@ -241,6 +283,18 @@ const FakeProductTable3 = () => {
           </tbody>
         </Table>
       )}
+      <ViewModal
+        show={showModal}
+        handleClose={handleCloseModal}
+        productId={selectedProductId}
+      />
+
+      <EditModal
+        show={showEditModal}
+        handleClose={handleCloseEditModal}
+        productId={selectedProductId}
+        handleUpdateProduct={handleUpdateProduct}
+      />
     </div>
   )
 }
