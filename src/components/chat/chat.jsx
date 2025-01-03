@@ -16,6 +16,8 @@ import SendIcon from "@mui/icons-material/Send"
 import { makeStyles } from "@mui/styles"
 import { styled } from "@mui/system"
 import axios from "axios"
+import { FaCircle } from "react-icons/fa"
+import io from "socket.io-client"
 
 const useStyles = makeStyles({
   chatSection: {
@@ -31,13 +33,18 @@ const useStyles = makeStyles({
   },
 })
 
+const socket = io("http://localhost:5000")
+
 const Chat = () => {
   const classes = useStyles()
 
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selectedUser, setSelectedUser] = useState(null) // State to track selected user
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [messages, setMessages] = useState([])
+  const [inputMessage, setInputMessage] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +65,41 @@ const Chat = () => {
 
     fetchData()
   }, [])
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to server")
+    })
+
+    socket.on("receive_message", (message) => {
+      if (
+        message.recipient === selectedUser.id ||
+        message.sender === selectedUser.id
+      ) {
+        console.log("Message received on client:", message)
+        setMessages((prevMessages) => [...prevMessages, message])
+      }
+    })
+
+    return () => {
+      socket.off("receive_message") // Clean up the listener when the component unmounts
+      socket.off("connect")
+    }
+  }, [selectedUser])
+
+  const sendMessage = () => {
+    if (inputMessage.trim() && selectedUser) {
+      const message = {
+        text: inputMessage,
+        sender: "You", // Assuming 'You' is the logged-in user
+        recipient: selectedUser.id,
+        timestamp: new Date().toLocaleTimeString(),
+      }
+      socket.emit("send_message", message) // Send message to the server
+      setMessages((prevMessages) => [...prevMessages, message]) // Update local messages
+      setInputMessage("")
+    }
+  }
 
   if (loading) {
     return <Typography>Loading...</Typography>
@@ -86,6 +128,12 @@ const Chat = () => {
     return alternatingList
   }
 
+  const filteredUsers = alternateUsers().filter((user) =>
+    (user.first_name + " " + user.last_name)
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  )
+
   const handleUserClick = (user) => {
     setSelectedUser(user)
   }
@@ -99,35 +147,51 @@ const Chat = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container component={Paper} className={classes.chatSection}>
-        <Grid item xs={3} className={classes.borderRight500}>
-          <List>
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="../assets/images/chatUser/man1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Arjun Patel"></ListItemText>
-            </ListItem>
-          </List>
+      <Grid
+        container
+        component={Paper}
+        style={{ height: "80vh", width: "100%" }}
+      >
+        <Grid item xs={3} style={{ borderRight: "1px solid #e0e0e0" }}>
+          {selectedUser && (
+            <List>
+              <ListItem
+                button
+                key={selectedUser.first_name + selectedUser.last_name}
+              >
+                <ListItemIcon>
+                  <Avatar
+                    alt={selectedUser.first_name + " " + selectedUser.last_name}
+                    src={selectedUser.image_path}
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    selectedUser.first_name + " " + selectedUser.last_name
+                  }
+                ></ListItemText>
+              </ListItem>
+            </List>
+          )}
           <Divider />
           <Grid item xs={12} style={{ padding: "10px" }}>
             <TextField
-              id="outlined-basic-email"
+              id="search"
               label="Search"
               variant="outlined"
               fullWidth
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Grid>
           <Divider />
 
           <List>
-            {alternateUsers().map((user, index) => (
+            {filteredUsers.map((user, index) => (
               <ListItem
                 button
                 key={user.first_name + " " + user.last_name + index}
+                onClick={() => handleUserClick(user)}
               >
                 <ListItemIcon>
                   <Avatar
@@ -138,50 +202,40 @@ const Chat = () => {
                 <ListItemText
                   primary={user.first_name + " " + user.last_name}
                 />
-                <ListItemText secondary="online" align="right" />
+                <ListItemText
+                  secondary={<FaCircle className="text-success" />}
+                  align="right"
+                />
               </ListItem>
             ))}
           </List>
         </Grid>
         <Grid item xs={9}>
-          <List className={classes.messageArea}>
-            <ListItem key="1" className="bg-light">
-              <Grid container>
-                <Grid item xs={9}>
-                  <ListItemText align="right" primary="Hey man, What's up ?" />
-                </Grid>
-                <Grid item xs={9}>
-                  <ListItemText align="right" secondary="09:30" />
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="2" className="bg-info">
-              <Grid container>
-                <Grid item xs={9}>
-                  <ListItemText
-                    align="left"
-                    primary="Nothing, Just Neflix and Chill !"
-                  />
-                </Grid>
-                <Grid item xs={9}>
-                  <ListItemText align="left" secondary="09:32" />
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="3" className="bg-light">
-              <Grid container>
-                <Grid item xs={9}>
-                  <ListItemText
-                    align="right"
-                    primary="Which series you looking now. "
-                  />
-                </Grid>
-                <Grid item xs={9}>
-                  <ListItemText align="right" secondary="09:33" />
-                </Grid>
-              </Grid>
-            </ListItem>
-          </List>
+          {selectedUser && (
+            <List style={{ height: "70vh", overflowY: "auto" }}>
+              {messages.map((message, index) => (
+                <ListItem
+                  key={index}
+                  className={message.sender === "You" ? "bg-light" : "bg-info"}
+                >
+                  <Grid container>
+                    <Grid item xs={9}>
+                      <ListItemText
+                        align={message.sender === "You" ? "right" : "left"}
+                        primary={message.text}
+                      />
+                    </Grid>
+                    <Grid item xs={9}>
+                      <ListItemText
+                        align="right"
+                        secondary={message.timestamp}
+                      />
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              ))}
+            </List>
+          )}
           <Divider />
           <Grid container style={{ padding: "20px" }}>
             <Grid item xs={11}>
@@ -189,10 +243,12 @@ const Chat = () => {
                 id="outlined-basic-email"
                 label="Type Something"
                 fullWidth
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
               />
             </Grid>
             <Grid xs={1} align="right">
-              <Fab color="primary" aria-label="add">
+              <Fab color="primary" aria-label="add" onClick={sendMessage}>
                 <SendIcon />
               </Fab>
             </Grid>

@@ -5,7 +5,7 @@ const Sidebar = () => {
   return (
     <div
       className="d-flex flex-column p-3 bg-light"
-      style={{ height: "100vh" }}
+      style={{ height: "200vh" }}
     >
       <h4 className="text-center mb-4">
         <img
