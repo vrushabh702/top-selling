@@ -40,6 +40,9 @@ const Sidebar = () => {
         <Nav.Link href="/chat" className="btn btn-light mb-2 w-100">
           chat
         </Nav.Link>
+        <Nav.Link href="/profile" className="btn btn-light mb-2 w-100">
+          profile
+        </Nav.Link>
       </Nav>
     </div>
   )

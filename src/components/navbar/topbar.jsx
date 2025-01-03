@@ -7,20 +7,19 @@ import {
   Tooltip,
 } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { useUser } from "../userContext"
 
 const Topbar = () => {
-  const [user, setUser] = useState(null)
+  const { user, setUser } = useUser()
   const [userName, setUserName] = useState("")
   const navigate = useNavigate()
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user")) // Assuming 'user' contains the email
-    if (storedUser) {
-      setUser(storedUser) // Set the user state with the data from localStorage
+    if (user) {
+      const username = user.email.split("@")[0]
+      setUserName(username) // Store the username
     }
-    const username = storedUser.email.split("@")[0]
-    setUserName(username) // Store the username
-  }, [])
+  }, [user])
 
   const renderTooltip = (props) => (
     <Tooltip {...props}>{user ? user.email : "No email available"}</Tooltip>

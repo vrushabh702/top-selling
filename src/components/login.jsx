@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Button, Form, Container, Row, Col, Card } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import { useUser } from "./userContext"
 
 const Login = () => {
   // State for email, password, and role
@@ -9,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const navigate = useNavigate()
+  const { setUser } = useUser()
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -28,6 +30,7 @@ const Login = () => {
     }
 
     // Store data in localStorage
+    setUser(user)
     localStorage.setItem("user", JSON.stringify(user))
 
     toast.success("Login successful!", {

@@ -7,11 +7,13 @@ import {
   FaEye,
   FaEdit,
   FaTrash,
+  FaPlus,
 } from "react-icons/fa"
 import { Table, Button, Spinner, Dropdown, Form } from "react-bootstrap"
 import ViewModal from "../Modals/viewModal"
 import EditModal from "../Modals/editModal"
 import DeleteModal from "../Modals/deleteModal"
+import AddModal from "../Modals/addModal"
 
 const FakeProductTable3 = () => {
   const [products, setProducts] = useState([])
@@ -30,6 +32,7 @@ const FakeProductTable3 = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [updatedProduct, setUpdatedProduct] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
 
   // Function to fetch and filter products
   const fetchProducts = async (queryString = "") => {
@@ -152,6 +155,16 @@ const FakeProductTable3 = () => {
     setUpdatedProduct(updatedProductData)
   }
 
+  const handleAddProduct = (newProduct) => {
+    setProducts((prevProducts) => {
+      // Prevent adding a product with the same ID
+      if (!prevProducts.some((product) => product.id === newProduct.id)) {
+        return [...prevProducts, newProduct]
+      }
+      return prevProducts
+    })
+  }
+
   const handleDeleteClick = (productId) => {
     setSelectedProductId(productId)
     setShowDeleteModal(true) // Show delete modal
@@ -203,6 +216,10 @@ const FakeProductTable3 = () => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+
+        <Button variant="success" onClick={() => setShowAddModal(true)}>
+          <FaPlus /> Add Product
+        </Button>
       </div>
 
       {/* Loading Spinner */}
@@ -267,7 +284,7 @@ const FakeProductTable3 = () => {
                 <td>{product.description.slice(0, 50)}...</td>
                 <td>{product.category}</td>
                 <td>
-                  {product.rating.rate} ({product.rating.count} reviews)
+                  {product?.rating?.rate} ({product?.rating?.count} reviews)
                 </td>
                 <td>
                   <Button variant="info" onClick={() => handleView(product.id)}>
@@ -292,6 +309,12 @@ const FakeProductTable3 = () => {
           </tbody>
         </Table>
       )}
+      <AddModal
+        show={showAddModal}
+        handleClose={() => setShowAddModal(false)}
+        handleAddProduct={handleAddProduct}
+      />
+
       <ViewModal
         show={showModal}
         handleClose={handleCloseModal}
