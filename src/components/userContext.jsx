@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
 
 // Create the Context
 const UserContext = createContext()
@@ -15,6 +15,12 @@ export const UserProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user")
     return storedUser ? JSON.parse(storedUser) : null
   })
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user)) // Save to localStorage
+    }
+  }, [user]) // Trigger this whenever `user` changes
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

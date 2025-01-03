@@ -85,6 +85,8 @@ const ProfilePage = () => {
         // Check if the new password is different from the current password
         setIsEditable(true)
         setShowModal(false)
+        setNewPassword("")
+        setConfirmPassword("")
         toast.success("Profile unlocked for editing!")
       } else {
         setError("New password cannot be the same as the current password!")
